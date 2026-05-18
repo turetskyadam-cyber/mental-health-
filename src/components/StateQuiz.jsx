@@ -69,13 +69,18 @@ export default function StateQuiz() {
     }, 400)
   }
 
-  // Auto-scroll to wave map 2.5s after result appears
+  // Auto-scroll to wave map 4.5s after result — cancel if user scrolls manually
   useEffect(() => {
     if (step !== 'result') return
     const t = setTimeout(() => {
       document.getElementById('wavemap')?.scrollIntoView({ behavior: 'smooth' })
-    }, 2500)
-    return () => clearTimeout(t)
+    }, 4500)
+    const onScroll = () => clearTimeout(t)
+    window.addEventListener('scroll', onScroll, { once: true, passive: true })
+    return () => {
+      clearTimeout(t)
+      window.removeEventListener('scroll', onScroll)
+    }
   }, [step])
 
   const scrollToWavemap = () => {
@@ -164,7 +169,7 @@ export default function StateQuiz() {
                   className="text-xs opacity-60 mb-6 font-medium"
                   style={{ animation: 'fadeSlideUp 0.4s 0.54s ease-out both' }}
                 >
-                  Taking you to your landscape in a moment…
+                  Taking you to your landscape in a few seconds — or tap the button now ↓
                 </p>
 
                 <div
