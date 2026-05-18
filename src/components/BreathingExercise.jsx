@@ -133,13 +133,13 @@ export default function BreathingExercise() {
               key={m.id}
               disabled={switching}
               onClick={() => switchMode(m.id)}
-              className="px-5 py-2.5 rounded-2xl font-bold text-sm transition-all duration-250 border-2"
+              className={`px-5 py-2.5 rounded-2xl font-bold text-sm transition-all duration-250 border-2 ${mode !== m.id && !switching ? 'hover:scale-[1.03] hover:shadow-md' : ''}`}
               style={{
                 background: mode === m.id ? `linear-gradient(135deg, ${m.color}CC, ${m.color}88)` : 'white',
                 borderColor: mode === m.id ? m.color : '#E5E7EB',
                 color: mode === m.id ? 'white' : '#6B7280',
-                transform: mode === m.id ? 'scale(1.04)' : 'scale(1)',
-                boxShadow: mode === m.id ? `0 4px 14px ${m.color}44` : 'none',
+                transform: mode === m.id ? 'scale(1.04)' : undefined,
+                boxShadow: mode === m.id ? `0 4px 14px ${m.color}44` : undefined,
               }}
             >
               <div>{m.name}</div>
@@ -154,14 +154,14 @@ export default function BreathingExercise() {
 
             {/* Outer glow ring */}
             <div
-              className="absolute rounded-full breathing-ring"
+              className={`absolute rounded-full ${isActive ? 'breathing-ring' : 'breathe-idle'}`}
               style={{
                 width: '100%',
                 height: '100%',
                 background: `radial-gradient(circle, ${color}18, transparent 70%)`,
-                transform: `scale(${0.8 + scale * 0.25})`,
+                transform: isActive ? `scale(${0.8 + scale * 0.25})` : undefined,
                 '--breath-dur': `${isActive && !done ? phases[phaseIndex]?.duration || 4000 : 600}ms`,
-                opacity: isActive ? 0.6 : 0.3,
+                opacity: isActive ? 0.6 : undefined,
               }}
             />
 

@@ -110,10 +110,12 @@ export default function WindowMap() {
                       </div>
                     </div>
                     <span
-                      className="text-xl transition-transform duration-300"
+                      className="text-xl"
                       style={{
                         color: z.textColor,
                         transform: isExp ? 'rotate(180deg)' : 'rotate(0deg)',
+                        transition: 'transform 400ms cubic-bezier(0.34,1.56,0.64,1)',
+                        display: 'inline-block',
                       }}
                     >
                       ▾

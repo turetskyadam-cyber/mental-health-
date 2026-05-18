@@ -147,29 +147,71 @@ export default function StateQuiz() {
                   {zone.name}
                 </h3>
                 <p
-                  className="text-lg font-semibold mb-3 opacity-90"
+                  className="text-lg font-semibold mb-1 opacity-90"
                   style={{ animation: 'fadeSlideUp 0.4s 0.42s ease-out both' }}
                 >
                   {zone.subtitle}
                 </p>
                 <p
-                  className="text-base opacity-80 max-w-sm mx-auto leading-relaxed mb-4"
+                  className="text-base font-semibold italic mb-4 opacity-80"
                   style={{ animation: 'fadeSlideUp 0.4s 0.48s ease-out both' }}
+                >
+                  {zone.tagline}
+                </p>
+                <p
+                  className="text-base opacity-80 max-w-sm mx-auto leading-relaxed mb-5"
+                  style={{ animation: 'fadeSlideUp 0.4s 0.54s ease-out both' }}
                 >
                   {zone.description}
                 </p>
 
+                {/* Mind + Body snapshot */}
+                <div
+                  className="grid grid-cols-2 gap-3 mb-5 text-left p-4 rounded-2xl"
+                  style={{
+                    background: 'rgba(255,255,255,0.20)',
+                    animation: 'fadeSlideUp 0.4s 0.60s ease-out both',
+                  }}
+                >
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-wider mb-2 opacity-60" style={{ color: zone.textColor }}>Mind</p>
+                    {zone.mind.slice(0, 3).map((item, i) => (
+                      <p
+                        key={item}
+                        className="text-sm font-medium mb-1 flex items-center gap-1.5"
+                        style={{ color: zone.textColor, animation: `fadeSlideUp 0.3s ${0.66 + i * 0.06}s ease-out both` }}
+                      >
+                        <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: zone.textColor, opacity: 0.5 }} />
+                        {item}
+                      </p>
+                    ))}
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-wider mb-2 opacity-60" style={{ color: zone.textColor }}>Body</p>
+                    {zone.body.slice(0, 3).map((item, i) => (
+                      <p
+                        key={item}
+                        className="text-sm font-medium mb-1 flex items-center gap-1.5"
+                        style={{ color: zone.textColor, animation: `fadeSlideUp 0.3s ${0.69 + i * 0.06}s ease-out both` }}
+                      >
+                        <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: zone.textColor, opacity: 0.5 }} />
+                        {item}
+                      </p>
+                    ))}
+                  </div>
+                </div>
+
                 {/* Auto-scroll notice */}
                 <p
                   className="text-xs opacity-60 mb-6 font-medium"
-                  style={{ animation: 'fadeSlideUp 0.4s 0.54s ease-out both' }}
+                  style={{ animation: 'fadeSlideUp 0.4s 0.84s ease-out both' }}
                 >
                   Scrolling you to your landscape now ↓
                 </p>
 
                 <div
                   className="flex flex-col sm:flex-row gap-3 justify-center"
-                  style={{ animation: 'fadeSlideUp 0.4s 0.6s ease-out both' }}
+                  style={{ animation: 'fadeSlideUp 0.4s 0.90s ease-out both' }}
                 >
                   <RippleButton
                     onClick={scrollToWavemap}
@@ -203,13 +245,15 @@ export default function StateQuiz() {
               {/* Progress bar */}
               <div className="h-1.5 bg-gray-100">
                 <div
-                  className="h-full rounded-full zone-transition"
+                  className="h-full rounded-full zone-transition relative overflow-hidden"
                   style={{
                     width: `${progress}%`,
                     background: 'linear-gradient(90deg, #4ECDC4, #88D8B0)',
                     transition: 'width 400ms cubic-bezier(0.4,0,0.2,1)',
                   }}
-                />
+                >
+                  <div className="absolute inset-0 progress-shimmer" />
+                </div>
               </div>
 
               <div className="p-8 md:p-10">
@@ -241,13 +285,13 @@ export default function StateQuiz() {
                         key={opt.zone}
                         onClick={() => handleSelect(opt.zone)}
                         disabled={selected !== null}
-                        className="flex items-center gap-4 px-5 py-4 rounded-2xl border-2 text-left font-semibold text-gray-700 ripple-container"
+                        className={`flex items-center gap-4 px-5 py-4 rounded-2xl border-2 text-left font-semibold text-gray-700 ripple-container ${selected === null ? 'hover:scale-[1.02]' : ''}`}
                         style={{
                           borderColor: isSelected ? z.fromColor : '#E5E7EB',
                           background: isSelected
                             ? `linear-gradient(135deg, ${z.fromColor}22, ${z.toColor}22)`
                             : 'white',
-                          transform: isSelected ? 'scale(1.02)' : 'scale(1)',
+                          transform: isSelected ? 'scale(1.02)' : undefined,
                           transition: 'all 200ms cubic-bezier(0.34,1.56,0.64,1)',
                           boxShadow: isSelected ? `0 0 0 3px ${z.fromColor}44` : undefined,
                         }}
