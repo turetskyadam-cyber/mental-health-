@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { ZONES } from '../constants/content'
 import { useZone } from '../context/ZoneContext'
 
@@ -10,6 +10,13 @@ export default function WindowMap() {
   const [markerPos, setMarkerPos] = useState(50)   // percentage 0-100 top to bottom
   const [dragging, setDragging] = useState(false)
   const trackRef = useRef(null)
+
+  // Sync marker + expand to quiz result whenever zone changes from quiz
+  useEffect(() => {
+    if (!activeZone) return
+    setMarkerPos(snapToZone(activeZone))
+    setExpanded(activeZone)
+  }, [activeZone])
 
   const getZoneFromPos = (pos) => {
     if (pos < 33) return 'hyper'

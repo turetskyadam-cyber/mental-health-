@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { ZONES, TOOLKIT } from '../constants/content'
 import { useZone } from '../context/ZoneContext'
 import FlipCard from './ui/FlipCard'
@@ -14,6 +14,11 @@ export default function ToolkitSection() {
   const { zone } = useZone()
   const [activeTab, setActiveTab] = useState(zone || 'window')
   const [prevTab, setPrevTab] = useState(null)
+
+  // Sync tab whenever quiz result changes
+  useEffect(() => {
+    if (zone) setActiveTab(zone)
+  }, [zone])
 
   const switchTab = (tabId) => {
     if (tabId === activeTab) return

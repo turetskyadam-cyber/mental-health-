@@ -21,47 +21,43 @@ export default function CardSortGame() {
   const cardRef = useRef(null)
   const done = index >= items.length
 
-  const getClientX = (e) => (e.touches ? e.touches[0].clientX : e.clientX)
-  const getClientY = (e) => (e.touches ? e.touches[0].clientY : e.clientY)
-
+  // Use Pointer Events only — they handle both mouse and touch,
+  // and avoid the double-fire bug from mixing onPointerDown + onTouchStart.
+  // touch-action:none on the card prevents browser scroll from stealing the drag.
   const handleDragStart = useCallback((e) => {
     e.preventDefault()
-    dragStart.current = { x: getClientX(e), y: getClientY(e) }
+    const startX = e.clientX
+    const startY = e.clientY
+    dragStart.current = { x: startX, y: startY }
     setIsDragging(true)
     setFlyDir(null)
 
     const onMove = (ev) => {
       if (!dragStart.current) return
-      const dx = getClientX(ev) - dragStart.current.x
-      const dy = getClientY(ev) - dragStart.current.y
-      setOffset({ x: dx, y: dy })
+      setOffset({ x: ev.clientX - startX, y: ev.clientY - startY })
     }
 
     const onEnd = (ev) => {
       if (!dragStart.current) return
-      const finalDx = getClientX(ev) - dragStart.current.x
+      const finalDx = ev.clientX - startX
       dragStart.current = null
       setIsDragging(false)
 
-      if (Math.abs(finalDx) >= 80) {
-        resolveSwipe(finalDx > 0 ? 'right' : 'left', finalDx)
+      if (Math.abs(finalDx) >= 70) {
+        resolveSwipe(finalDx > 0 ? 'right' : 'left')
       } else {
         setOffset({ x: 0, y: 0 })
       }
 
       window.removeEventListener('pointermove', onMove)
       window.removeEventListener('pointerup', onEnd)
-      window.removeEventListener('touchmove', onMove)
-      window.removeEventListener('touchend', onEnd)
     }
 
-    window.addEventListener('pointermove', onMove, { passive: false })
+    window.addEventListener('pointermove', onMove)
     window.addEventListener('pointerup', onEnd)
-    window.addEventListener('touchmove', onMove, { passive: false })
-    window.addEventListener('touchend', onEnd)
   }, [index, items])
 
-  const resolveSwipe = (dir, dx) => {
+  const resolveSwipe = (dir) => {
     const card = items[index]
     const guessedExpand = dir === 'right'
     const correct = (guessedExpand && card.correct === 'expand') ||
@@ -99,8 +95,8 @@ export default function CardSortGame() {
 
   const handleKeyDown = (e) => {
     if (done) return
-    if (e.key === 'ArrowRight') resolveSwipe('right', 100)
-    if (e.key === 'ArrowLeft')  resolveSwipe('left', -100)
+    if (e.key === 'ArrowRight') resolveSwipe('right')
+    if (e.key === 'ArrowLeft')  resolveSwipe('left')
   }
 
   const reset = () => {
@@ -239,12 +235,12 @@ export default function CardSortGame() {
                 width: '90%',
                 height: '100%',
                 zIndex: 2,
+                touchAction: 'none',
                 transform: `translateX(${offset.x}px) translateY(${offset.y * 0.2}px) rotate(${rotation}deg)`,
                 transition: flyDir ? 'transform 350ms ease-in' : isDragging ? 'none' : 'transform 350ms cubic-bezier(0.34,1.56,0.64,1)',
                 animation: shaking ? 'shake 0.45s ease-in-out' : undefined,
               }}
               onPointerDown={handleDragStart}
-              onTouchStart={handleDragStart}
             >
               {/* Swipe hint overlays */}
               {swipeRight && (
