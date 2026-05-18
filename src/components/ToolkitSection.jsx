@@ -72,19 +72,6 @@ export default function ToolkitSection() {
           ))}
         </div>
 
-        {/* Zone description strip */}
-        <div
-          className="text-center mb-8 p-4 rounded-2xl zone-transition"
-          key={activeTab}
-          style={{
-            background: `linear-gradient(135deg, ${zoneData.fromColor}18, ${zoneData.toColor}18)`,
-            borderLeft: `4px solid ${zoneData.fromColor}`,
-            animation: 'fadeSlideUp 0.3s ease-out both',
-          }}
-        >
-          <p className="text-gray-600 font-medium italic">{zoneData.description}</p>
-        </div>
-
         {/* Flip cards */}
         <div
           className="grid md:grid-cols-3 gap-6"
