@@ -9,13 +9,12 @@ export default function CardSortGame() {
   const [items] = useState(shuffled)
   const [index, setIndex] = useState(0)
   const [score, setScore] = useState(0)
-  const [feedback, setFeedback] = useState(null)  // 'correct' | 'wrong'
   const [offset, setOffset] = useState({ x: 0, y: 0 })
   const [isDragging, setIsDragging] = useState(false)
-  const [flyDir, setFlyDir] = useState(null)       // 'left' | 'right'
+  const [flyDir, setFlyDir] = useState(null)
   const [confettiTrig, setConfettiTrig] = useState(0)
   const [showRef, setShowRef] = useState(false)
-  const [shaking, setShaking] = useState(false)
+  const [wrongFeedback, setWrongFeedback] = useState(null)
 
   const dragStart = useRef(null)
   const cardRef = useRef(null)
@@ -31,6 +30,7 @@ export default function CardSortGame() {
     dragStart.current = { x: startX, y: startY }
     setIsDragging(true)
     setFlyDir(null)
+    setWrongFeedback(null)
 
     const onMove = (ev) => {
       if (!dragStart.current) return
@@ -57,39 +57,39 @@ export default function CardSortGame() {
     window.addEventListener('pointerup', onEnd)
   }, [index, items])
 
+  const advanceCard = (nextIndex) => {
+    setOffset({ x: 0, y: 0 })
+    setFlyDir(null)
+    setIndex(nextIndex)
+    if (nextIndex >= items.length) {
+      setTimeout(() => setConfettiTrig((t) => t + 1), 200)
+    }
+  }
+
   const resolveSwipe = (dir) => {
     const card = items[index]
     const guessedExpand = dir === 'right'
     const correct = (guessedExpand && card.correct === 'expand') ||
                     (!guessedExpand && card.correct === 'constrict')
+    const next = index + 1
+
+    // Always fly the card off in the swiped direction
+    setFlyDir(dir)
+    setOffset({ x: dir === 'right' ? 650 : -650, y: 0 })
 
     if (correct) {
-      setFeedback('correct')
       setScore((s) => s + 1)
+      setTimeout(() => advanceCard(next), 360)
     } else {
-      setFeedback('wrong')
-    }
-
-    if (correct) {
-      setFlyDir(dir)
-      setOffset({ x: dir === 'right' ? 600 : -600, y: 0 })
+      // Show explanation, then advance
       setTimeout(() => {
-        setIndex((i) => i + 1)
-        setOffset({ x: 0, y: 0 })
-        setFeedback(null)
-        setFlyDir(null)
-        if (index === items.length - 1) {
-          // last card
-          setTimeout(() => setConfettiTrig((t) => t + 1), 200)
-        }
-      }, 350)
-    } else {
-      setShaking(true)
-      setOffset({ x: 0, y: 0 })
-      setTimeout(() => {
-        setShaking(false)
-        setFeedback(null)
-      }, 500)
+        setWrongFeedback({
+          item: card,
+          guessedDir: dir,
+          correctLabel: card.correct === 'expand' ? '→ Expands' : '← Constricts',
+        })
+        advanceCard(next)
+      }, 360)
     }
   }
 
@@ -237,8 +237,7 @@ export default function CardSortGame() {
                 zIndex: 2,
                 touchAction: 'none',
                 transform: `translateX(${offset.x}px) translateY(${offset.y * 0.2}px) rotate(${rotation}deg)`,
-                transition: flyDir ? 'transform 350ms ease-in' : isDragging ? 'none' : 'transform 350ms cubic-bezier(0.34,1.56,0.64,1)',
-                animation: shaking ? 'shake 0.45s ease-in-out' : undefined,
+                transition: flyDir ? 'transform 360ms ease-in' : isDragging ? 'none' : 'transform 350ms cubic-bezier(0.34,1.56,0.64,1)',
               }}
               onPointerDown={handleDragStart}
             >
@@ -272,6 +271,42 @@ export default function CardSortGame() {
             <span className="text-[#FF6B6B]">← Constricts</span>
             <span className="text-xs">or use ← → keys</span>
             <span className="text-[#4ECDC4]">Expands →</span>
+          </div>
+        )}
+
+        {/* Wrong answer explanation panel */}
+        {wrongFeedback && (
+          <div
+            className="mt-4 p-4 rounded-2xl border-2 text-left"
+            style={{
+              background: '#FFF0EE',
+              borderColor: '#FF6B6B55',
+              animation: 'fadeSlideUp 0.35s ease-out both',
+            }}
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex-1">
+                <p className="font-bold text-[#7B2D00] text-sm mb-1">
+                  {wrongFeedback.item.icon} &ldquo;{wrongFeedback.item.text}&rdquo; actually{' '}
+                  <span className="underline decoration-dotted">
+                    {wrongFeedback.item.correct === 'expand' ? 'expands' : 'constricts'}
+                  </span>{' '}
+                  your window{' '}
+                  <span className="font-black">
+                    {wrongFeedback.correctLabel}
+                  </span>
+                </p>
+                <p className="text-gray-600 text-xs leading-relaxed">
+                  {wrongFeedback.item.explanation}
+                </p>
+              </div>
+              <button
+                onClick={() => setWrongFeedback(null)}
+                className="flex-shrink-0 text-xs font-bold text-[#FF6B6B] hover:text-[#cc4444] transition-colors mt-0.5"
+              >
+                Got it ✓
+              </button>
+            </div>
           </div>
         )}
       </div>

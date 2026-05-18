@@ -86,9 +86,9 @@ export default function WindowMap() {
               return (
                 <div
                   key={zId}
-                  className="relative cursor-pointer transition-all duration-500 overflow-hidden"
+                  className={`relative cursor-pointer transition-all duration-500 ${isExp ? '' : 'overflow-hidden'}`}
                   style={{
-                    minHeight: isExp ? 260 : 100,
+                    minHeight: isExp ? 340 : 100,
                     flex: isExp ? '3' : '1',
                     background: `linear-gradient(135deg, ${z.fromColor}CC, ${z.toColor}CC)`,
                   }}
