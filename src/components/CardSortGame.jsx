@@ -16,6 +16,7 @@ export default function CardSortGame() {
   const [showRef, setShowRef] = useState(false)
   const [wrongFeedback, setWrongFeedback] = useState(null)
   const [flashCorrect, setFlashCorrect] = useState(false)
+  const [gaugeState, setGaugeState] = useState('neutral') // 'neutral' | 'correct' | 'wrong'
 
   const dragStart = useRef(null)
   const cardRef = useRef(null)
@@ -81,10 +82,14 @@ export default function CardSortGame() {
     if (correct) {
       setScore((s) => s + 1)
       setFlashCorrect(true)
+      setGaugeState('correct')
       setTimeout(() => setFlashCorrect(false), 320)
+      setTimeout(() => setGaugeState('neutral'), 700)
       setTimeout(() => advanceCard(next), 360)
     } else {
       // Show explanation, then advance
+      setGaugeState('wrong')
+      setTimeout(() => setGaugeState('neutral'), 700)
       setTimeout(() => {
         setWrongFeedback({
           item: card,
@@ -106,6 +111,7 @@ export default function CardSortGame() {
     setIndex(0)
     setScore(0)
     setWrongFeedback(null)
+    setGaugeState('neutral')
     setOffset({ x: 0, y: 0 })
     setFlyDir(null)
     setShowRef(false)
@@ -135,19 +141,17 @@ export default function CardSortGame() {
           </p>
         </div>
 
-        {/* Accuracy gauge */}
+        {/* Swipe feedback gauge */}
         {(() => {
-          const answered = index
-          const accuracy = answered === 0 ? 0.5 : score / answered
-          const pct = Math.max(4, Math.min(96, accuracy * 100))
-          const gaugeColor = accuracy < 0.5
-            ? `color-mix(in srgb, #FF6B6B ${Math.round((0.5 - accuracy) * 200)}%, #D1D5DB)`
-            : `color-mix(in srgb, #4ECDC4 ${Math.round((accuracy - 0.5) * 200)}%, #D1D5DB)`
+          const pct = gaugeState === 'correct' ? 85 : gaugeState === 'wrong' ? 15 : 50
+          const dotColor = gaugeState === 'correct' ? '#4ECDC4' : gaugeState === 'wrong' ? '#FF6B6B' : '#D1D5DB'
+          const label = gaugeState === 'correct' ? '✓ Right!' : gaugeState === 'wrong' ? '✗ Wrong' : '—'
+          const labelColor = gaugeState === 'correct' ? '#0D4A40' : gaugeState === 'wrong' ? '#7B2D00' : '#9CA3AF'
           return (
             <div className="mb-6">
-              <div className="flex justify-between text-xs font-semibold text-gray-400 mb-1.5">
+              <div className="flex justify-between text-xs font-semibold mb-1.5">
                 <span className="text-[#FF6B6B]">← Wrong</span>
-                <span>{answered === 0 ? '—' : `${score}/${answered} correct`}</span>
+                <span style={{ color: labelColor, transition: 'color 300ms ease' }}>{label}</span>
                 <span className="text-[#4ECDC4]">Right →</span>
               </div>
               <div className="relative h-3 rounded-full" style={{ background: 'linear-gradient(to right, #FF6B6B 0%, #D1D5DB 50%, #4ECDC4 100%)' }}>
@@ -155,7 +159,7 @@ export default function CardSortGame() {
                   className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-5 h-5 rounded-full border-2 border-white shadow-md"
                   style={{
                     left: `${pct}%`,
-                    background: gaugeColor,
+                    background: dotColor,
                     transition: 'left 400ms cubic-bezier(0.34,1.56,0.64,1), background 400ms ease',
                   }}
                 />

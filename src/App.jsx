@@ -8,7 +8,6 @@ import WindowMap from './components/WindowMap'
 import ToolkitSection from './components/ToolkitSection'
 import BreathingExercise from './components/BreathingExercise'
 import CardSortGame from './components/CardSortGame'
-import DailyTracker from './components/DailyTracker'
 import PersonalHarbor from './components/PersonalHarbor'
 
 function SectionReveal({ children }) {
@@ -49,7 +48,6 @@ export default function App() {
           <ToolkitSection />
           <BreathingExercise />
           <CardSortGame />
-          <DailyTracker />
           <PersonalHarbor />
         </SectionReveal>
 
