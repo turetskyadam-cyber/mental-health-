@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { QUIZ_QUESTIONS, ZONES } from '../constants/content'
 import { useZone } from '../context/ZoneContext'
 import RippleButton from './ui/RippleButton'
@@ -69,8 +69,17 @@ export default function StateQuiz() {
     }, 400)
   }
 
-  const scrollToToolkit = () => {
-    document.getElementById('toolkit')?.scrollIntoView({ behavior: 'smooth' })
+  // Auto-scroll to wave map 2.5s after result appears
+  useEffect(() => {
+    if (step !== 'result') return
+    const t = setTimeout(() => {
+      document.getElementById('wavemap')?.scrollIntoView({ behavior: 'smooth' })
+    }, 2500)
+    return () => clearTimeout(t)
+  }, [step])
+
+  const scrollToWavemap = () => {
+    document.getElementById('wavemap')?.scrollIntoView({ behavior: 'smooth' })
   }
 
   const zone = resultZone ? ZONES[resultZone] : null
@@ -114,34 +123,48 @@ export default function StateQuiz() {
 
               <div className="p-10 text-center" style={{ color: zone.textColor }}>
                 <div
-                  className="text-7xl mb-4"
+                  className="text-7xl mb-5"
                   style={{ animation: 'expandIn 0.5s 0.2s cubic-bezier(0.34,1.56,0.64,1) both' }}
                 >
                   {zone.emoji}
                 </div>
-                <p
-                  className="font-semibold text-sm uppercase tracking-widest mb-1 opacity-80"
-                  style={{ animation: 'fadeSlideUp 0.4s 0.3s ease-out both' }}
+
+                {/* Clear "this is your zone" label */}
+                <div
+                  className="inline-block px-4 py-1.5 rounded-full mb-4 font-bold text-xs uppercase tracking-widest"
+                  style={{
+                    background: 'rgba(255,255,255,0.30)',
+                    animation: 'fadeSlideUp 0.4s 0.28s ease-out both',
+                  }}
                 >
-                  You&apos;re in the
-                </p>
+                  ✦ This is your zone ✦
+                </div>
+
                 <h3
                   className="font-display font-black text-4xl md:text-5xl mb-2"
-                  style={{ animation: 'fadeSlideUp 0.4s 0.38s ease-out both' }}
+                  style={{ animation: 'fadeSlideUp 0.4s 0.36s ease-out both' }}
                 >
                   {zone.name}
                 </h3>
                 <p
-                  className="text-lg font-medium mb-2 opacity-90"
-                  style={{ animation: 'fadeSlideUp 0.4s 0.44s ease-out both' }}
+                  className="text-lg font-semibold mb-3 opacity-90"
+                  style={{ animation: 'fadeSlideUp 0.4s 0.42s ease-out both' }}
                 >
                   {zone.subtitle}
                 </p>
                 <p
-                  className="text-base opacity-80 max-w-sm mx-auto leading-relaxed mb-8"
-                  style={{ animation: 'fadeSlideUp 0.4s 0.5s ease-out both' }}
+                  className="text-base opacity-80 max-w-sm mx-auto leading-relaxed mb-4"
+                  style={{ animation: 'fadeSlideUp 0.4s 0.48s ease-out both' }}
                 >
                   {zone.description}
+                </p>
+
+                {/* Auto-scroll notice */}
+                <p
+                  className="text-xs opacity-60 mb-6 font-medium"
+                  style={{ animation: 'fadeSlideUp 0.4s 0.54s ease-out both' }}
+                >
+                  Taking you to your landscape in a moment…
                 </p>
 
                 <div
@@ -149,7 +172,7 @@ export default function StateQuiz() {
                   style={{ animation: 'fadeSlideUp 0.4s 0.6s ease-out both' }}
                 >
                   <RippleButton
-                    onClick={scrollToToolkit}
+                    onClick={scrollToWavemap}
                     className="px-7 py-3.5 rounded-2xl font-bold text-base shadow-lg"
                     style={{
                       background: 'rgba(255,255,255,0.35)',
@@ -157,7 +180,7 @@ export default function StateQuiz() {
                       border: '2px solid rgba(255,255,255,0.5)',
                     }}
                   >
-                    Here&apos;s your toolkit →
+                    See Your Landscape →
                   </RippleButton>
                   <button
                     onClick={retake}
