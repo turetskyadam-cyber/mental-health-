@@ -15,6 +15,7 @@ export default function CardSortGame() {
   const [confettiTrig, setConfettiTrig] = useState(0)
   const [showRef, setShowRef] = useState(false)
   const [wrongFeedback, setWrongFeedback] = useState(null)
+  const [flashCorrect, setFlashCorrect] = useState(false)
 
   const dragStart = useRef(null)
   const cardRef = useRef(null)
@@ -79,6 +80,8 @@ export default function CardSortGame() {
 
     if (correct) {
       setScore((s) => s + 1)
+      setFlashCorrect(true)
+      setTimeout(() => setFlashCorrect(false), 320)
       setTimeout(() => advanceCard(next), 360)
     } else {
       // Show explanation, then advance
@@ -102,7 +105,7 @@ export default function CardSortGame() {
   const reset = () => {
     setIndex(0)
     setScore(0)
-    setFeedback(null)
+    setWrongFeedback(null)
     setOffset({ x: 0, y: 0 })
     setFlyDir(null)
     setShowRef(false)
@@ -132,27 +135,34 @@ export default function CardSortGame() {
           </p>
         </div>
 
-        {/* Score */}
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex gap-1">
-            {items.map((_, i) => (
-              <div
-                key={i}
-                className="rounded-full transition-all duration-300"
-                style={{
-                  width: i < index ? 18 : 8,
-                  height: 8,
-                  background: i < index
-                    ? items[i] && score > 0 ? '#4ECDC4' : '#FF6B6B'
-                    : '#E5E7EB',
-                }}
-              />
-            ))}
-          </div>
-          <div className="font-bold text-gray-600 text-sm">
-            {score}/{items.length} correct
-          </div>
-        </div>
+        {/* Accuracy gauge */}
+        {(() => {
+          const answered = index
+          const accuracy = answered === 0 ? 0.5 : score / answered
+          const pct = Math.max(4, Math.min(96, accuracy * 100))
+          const gaugeColor = accuracy < 0.5
+            ? `color-mix(in srgb, #FF6B6B ${Math.round((0.5 - accuracy) * 200)}%, #D1D5DB)`
+            : `color-mix(in srgb, #4ECDC4 ${Math.round((accuracy - 0.5) * 200)}%, #D1D5DB)`
+          return (
+            <div className="mb-6">
+              <div className="flex justify-between text-xs font-semibold text-gray-400 mb-1.5">
+                <span className="text-[#FF6B6B]">← Wrong</span>
+                <span>{answered === 0 ? '—' : `${score}/${answered} correct`}</span>
+                <span className="text-[#4ECDC4]">Right →</span>
+              </div>
+              <div className="relative h-3 rounded-full" style={{ background: 'linear-gradient(to right, #FF6B6B 0%, #D1D5DB 50%, #4ECDC4 100%)' }}>
+                <div
+                  className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-5 h-5 rounded-full border-2 border-white shadow-md"
+                  style={{
+                    left: `${pct}%`,
+                    background: gaugeColor,
+                    transition: 'left 400ms cubic-bezier(0.34,1.56,0.64,1), background 400ms ease',
+                  }}
+                />
+              </div>
+            </div>
+          )
+        })()}
 
         {done ? (
           /* ── Completion ── */
@@ -259,6 +269,12 @@ export default function CardSortGame() {
                 </div>
               )}
 
+              {flashCorrect && (
+                <div
+                  className="absolute inset-0 rounded-3xl pointer-events-none"
+                  style={{ background: 'rgba(78,205,196,0.28)', animation: 'expandIn 0.3s ease-out both' }}
+                />
+              )}
               <div className="text-5xl mb-3">{card.icon}</div>
               <p className="font-display font-black text-xl text-gray-800 text-center px-8">{card.text}</p>
               <p className="text-xs text-gray-400 mt-3 font-medium">{index + 1} / {items.length}</p>

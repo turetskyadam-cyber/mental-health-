@@ -113,7 +113,7 @@ export default function PersonalHarbor() {
 
           {/* Card 1 — Whispers */}
           <div
-            className="bg-white rounded-3xl border-2 p-6 transition-all duration-200"
+            className="bg-white rounded-3xl border-2 p-6 transition-all duration-200 interactive-lift"
             style={{
               borderColor: '#E5E7EB',
               ...CARD_FOCUS_STYLE('whispers'),
@@ -157,7 +157,7 @@ export default function PersonalHarbor() {
 
           {/* Card 2 — Anchors */}
           <div
-            className="bg-white rounded-3xl border-2 p-6 transition-all duration-200"
+            className="bg-white rounded-3xl border-2 p-6 transition-all duration-200 interactive-lift"
             style={{
               borderColor: '#E5E7EB',
               ...CARD_FOCUS_STYLE('anchors'),
@@ -210,7 +210,7 @@ export default function PersonalHarbor() {
         <div className="flex justify-center mt-8">
           <button
             onClick={copyHarbor}
-            className="flex items-center gap-2 px-6 py-3 rounded-2xl border-2 font-semibold text-sm transition-all duration-250"
+            className="flex items-center gap-2 px-6 py-3 rounded-2xl border-2 font-semibold text-sm transition-all duration-250 interactive"
             style={{
               borderColor: copied ? '#4ECDC4' : '#E5E7EB',
               background: copied ? 'linear-gradient(135deg, #4ECDC422, #88D8B022)' : 'white',
