@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { HARBOR_PLACEHOLDERS } from '../constants/content'
+import { useLocalStorage } from '../hooks/useLocalStorage'
 import RippleButton from './ui/RippleButton'
 
 function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
@@ -35,6 +36,8 @@ function roundRect(ctx, x, y, w, h, r) {
 }
 
 export default function PersonalHarbor() {
+  const [storedName] = useLocalStorage('ww_name', '')
+  const [storedDoctor] = useLocalStorage('ww_doctor', '')
   const [whispers, setWhispers] = useState('')
   const [anchor1, setAnchor1] = useState('')
   const [anchor2, setAnchor2] = useState('')
@@ -68,7 +71,7 @@ export default function PersonalHarbor() {
     // Measure content height first
     const tempCtx = canvas.getContext('2d')
     tempCtx.font = '500 15px "Plus Jakarta Sans", sans-serif'
-    let estimatedH = 220
+    let estimatedH = storedDoctor ? 236 : 220
     if (whispers) estimatedH += Math.ceil(whispers.length / 55) * 24 + 60
     if (anchor1 || anchor2) estimatedH += 120
     const H = Math.max(420, Math.min(estimatedH + 80, 700))
@@ -106,17 +109,26 @@ export default function PersonalHarbor() {
     // Title
     ctx.fillStyle = '#1F2937'
     ctx.font = '900 32px "Fraunces", serif'
-    ctx.fillText('My Wellness Snapshot', 40, 85)
+    const titleText = storedName ? `${storedName}'s Wellness Snapshot` : 'My Wellness Snapshot'
+    ctx.fillText(titleText, 40, 85)
+
+    // Doctor attribution
+    if (storedDoctor) {
+      ctx.fillStyle = '#9CA3AF'
+      ctx.font = '500 12px "Plus Jakarta Sans", sans-serif'
+      ctx.fillText(`Prepared with ${storedDoctor}`, 40, 103)
+    }
 
     // Divider
+    const dividerY = storedDoctor ? 118 : 102
     ctx.strokeStyle = '#E5E7EB'
     ctx.lineWidth = 1
     ctx.beginPath()
-    ctx.moveTo(40, 102)
-    ctx.lineTo(W - 40, 102)
+    ctx.moveTo(40, dividerY)
+    ctx.lineTo(W - 40, dividerY)
     ctx.stroke()
 
-    let curY = 130
+    let curY = dividerY + 20
 
     // Whispers section
     ctx.fillStyle = '#0D4A40'
