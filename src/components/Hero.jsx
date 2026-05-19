@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import RippleButton from './ui/RippleButton'
+import { useLocalStorage } from '../hooks/useLocalStorage'
 
 const PARTICLES = [
   { emoji: '🌊', delay: '0s',   dur: '7s',  left: '8%',  driftX: '20px'  },
@@ -15,6 +16,8 @@ const PARTICLES = [
 export default function Hero() {
   const [loaded, setLoaded] = useState(false)
   const parallaxRef = useRef(null)
+  const [storedName] = useLocalStorage('ww_name', '')
+  const [storedDoctor] = useLocalStorage('ww_doctor', '')
 
   useEffect(() => {
     const t = setTimeout(() => setLoaded(true), 80)
@@ -106,9 +109,13 @@ export default function Hero() {
             transition: 'opacity 0.5s ease-out, transform 0.5s ease-out',
           }}
         >
-          <span>Dr. Santiago&apos;s Clinical Resources</span>
+          {storedName ? (
+            <span>Hi, <strong>{storedName}</strong> 👋</span>
+          ) : (
+            <span>Welcome 👋</span>
+          )}
           <span className="w-1.5 h-1.5 rounded-full bg-[#4ECDC4]" />
-          <span>Interactive Edition</span>
+          <span>{storedDoctor ? `${storedDoctor}'s Resources` : 'Window of Wellness'}</span>
         </div>
 
         {/* Title */}

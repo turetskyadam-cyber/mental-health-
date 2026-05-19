@@ -5,9 +5,13 @@ import RippleButton from './ui/RippleButton'
 
 export default function Onboarding() {
   const [visited, setVisited] = useLocalStorage('ww_visited', false)
+  const [, setStoredName] = useLocalStorage('ww_name', '')
+  const [, setStoredDoctor] = useLocalStorage('ww_doctor', '')
   const [slide, setSlide] = useState(0)
   const [exiting, setExiting] = useState(false)
   const [show, setShow] = useState(false)
+  const [nameInput, setNameInput] = useState('')
+  const [doctorInput, setDoctorInput] = useState('')
 
   useEffect(() => {
     if (!visited) {
@@ -22,6 +26,8 @@ export default function Onboarding() {
   const isLast = slide === ONBOARDING_SLIDES.length - 1
 
   const dismiss = () => {
+    if (nameInput.trim()) setStoredName(nameInput.trim())
+    if (doctorInput.trim()) setStoredDoctor(doctorInput.trim())
     setExiting(true)
     setTimeout(() => {
       setVisited(true)
@@ -70,14 +76,51 @@ export default function Onboarding() {
           {current.title}
         </h2>
 
-        {/* Text */}
-        <p
-          className="text-gray-500 leading-relaxed mb-8"
-          key={`p${slide}`}
-          style={{ animation: 'fadeSlideUp 0.35s 0.1s ease-out both' }}
-        >
-          {current.text}
-        </p>
+        {/* Text or input fields */}
+        {current.text !== null ? (
+          <p
+            className="text-gray-500 leading-relaxed mb-8"
+            key={`p${slide}`}
+            style={{ animation: 'fadeSlideUp 0.35s 0.1s ease-out both' }}
+          >
+            {current.text}
+          </p>
+        ) : (
+          <div
+            className="text-left mb-8 space-y-4"
+            key={`p${slide}`}
+            style={{ animation: 'fadeSlideUp 0.35s 0.1s ease-out both' }}
+          >
+            <div>
+              <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1.5">
+                Your first name (optional)
+              </label>
+              <input
+                type="text"
+                value={nameInput}
+                onChange={(e) => setNameInput(e.target.value)}
+                placeholder="e.g. Jordan"
+                autoFocus
+                className="w-full rounded-2xl border-0 bg-gray-50 px-4 py-3 text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-[#4ECDC4]/40 transition-all"
+                style={{ caretColor: '#4ECDC4' }}
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1.5">
+                Your doctor&apos;s name (optional)
+              </label>
+              <input
+                type="text"
+                value={doctorInput}
+                onChange={(e) => setDoctorInput(e.target.value)}
+                placeholder="e.g. Dr. Santiago"
+                className="w-full rounded-2xl border-0 bg-gray-50 px-4 py-3 text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-[#4ECDC4]/40 transition-all"
+                style={{ caretColor: '#4ECDC4' }}
+              />
+            </div>
+            <p className="text-xs text-gray-400 text-center">Saved only on your device — never shared.</p>
+          </div>
+        )}
 
         {/* Dots */}
         <div className="flex items-center justify-center gap-2 mb-6">

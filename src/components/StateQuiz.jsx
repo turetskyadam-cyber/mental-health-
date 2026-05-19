@@ -1,11 +1,13 @@
 import { useState, useRef, useEffect } from 'react'
 import { QUIZ_QUESTIONS, ZONES } from '../constants/content'
 import { useZone } from '../context/ZoneContext'
+import { useLocalStorage } from '../hooks/useLocalStorage'
 import RippleButton from './ui/RippleButton'
 import Confetti from './ui/Confetti'
 
 export default function StateQuiz() {
   const { setZone } = useZone()
+  const [storedName] = useLocalStorage('ww_name', '')
   const [step, setStep] = useState(0)         // 0 = question index, 'result' = show result
   const [answers, setAnswers] = useState([])
   const [selected, setSelected] = useState(null)
@@ -137,7 +139,7 @@ export default function StateQuiz() {
                     animation: 'fadeSlideUp 0.4s 0.28s ease-out both',
                   }}
                 >
-                  ✦ This is your zone ✦
+                  {storedName ? `✦ ${storedName}'s zone ✦` : '✦ This is your zone ✦'}
                 </div>
 
                 <h3

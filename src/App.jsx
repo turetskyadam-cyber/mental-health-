@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { ZoneProvider } from './context/ZoneContext'
+import { useLocalStorage } from './hooks/useLocalStorage'
 import Nav from './components/Nav'
 import Hero from './components/Hero'
 import Onboarding from './components/Onboarding'
@@ -34,6 +35,28 @@ function SectionReveal({ children }) {
   return children
 }
 
+function Footer() {
+  const [storedName] = useLocalStorage('ww_name', '')
+  const [storedDoctor] = useLocalStorage('ww_doctor', '')
+
+  return (
+    <footer className="py-12 px-6 text-center bg-white border-t border-gray-100">
+      <p className="font-display font-black text-xl text-gray-700 mb-1">
+        Window of Wellness
+      </p>
+      <p className="text-sm text-gray-400">
+        {storedDoctor
+          ? `${storedDoctor}'s Clinical Resources · Window of Tolerance model`
+          : "Based on Dr. Santiago's Clinical Resources · Window of Tolerance model"}
+        {storedName && <span> · Prepared for <strong>{storedName}</strong></span>}
+      </p>
+      <p className="text-xs text-gray-300 mt-2">
+        For educational purposes. If you&apos;re struggling, please reach out to a mental health professional. 💚
+      </p>
+    </footer>
+  )
+}
+
 export default function App() {
   return (
     <ZoneProvider>
@@ -51,18 +74,7 @@ export default function App() {
           <PersonalHarbor />
         </SectionReveal>
 
-        {/* Footer */}
-        <footer className="py-12 px-6 text-center bg-white border-t border-gray-100">
-          <p className="font-display font-black text-xl text-gray-700 mb-1">
-            Window of Wellness
-          </p>
-          <p className="text-sm text-gray-400">
-            Based on Dr. Santiago&apos;s Clinical Resources · Window of Tolerance model
-          </p>
-          <p className="text-xs text-gray-300 mt-2">
-            For educational purposes. If you&apos;re struggling, please reach out to a mental health professional. 💚
-          </p>
-        </footer>
+        <Footer />
       </div>
     </ZoneProvider>
   )

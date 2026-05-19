@@ -276,6 +276,11 @@ export const ONBOARDING_SLIDES = [
     title: 'Totally private',
     text: 'Everything you fill in stays right here on your device. No accounts, no data sent anywhere.',
   },
+  {
+    emoji: '👤',
+    title: 'Make it yours',
+    text: null, // rendered as input fields
+  },
 ]
 
 export const BREATHING_MODES = {
