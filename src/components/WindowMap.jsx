@@ -114,7 +114,7 @@ export default function WindowMap() {
                       style={{
                         color: z.textColor,
                         transform: isExp ? 'rotate(180deg)' : 'rotate(0deg)',
-                        transition: 'transform 400ms cubic-bezier(0.34,1.56,0.64,1)',
+                        transition: 'transform 200ms cubic-bezier(0.23, 1, 0.32, 1)',
                         display: 'inline-block',
                       }}
                     >

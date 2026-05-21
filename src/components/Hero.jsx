@@ -2,17 +2,6 @@ import { useEffect, useRef, useState } from 'react'
 import RippleButton from './ui/RippleButton'
 import { useLocalStorage } from '../hooks/useLocalStorage'
 
-const PARTICLES = [
-  { emoji: '🌊', delay: '0s',   dur: '7s',  left: '8%',  driftX: '20px'  },
-  { emoji: '✨', delay: '1.2s', dur: '6s',  left: '22%', driftX: '-15px' },
-  { emoji: '🌿', delay: '0.5s', dur: '8s',  left: '42%', driftX: '30px'  },
-  { emoji: '💛', delay: '2s',   dur: '5.5s',left: '62%', driftX: '-20px' },
-  { emoji: '✨', delay: '0.8s', dur: '9s',  left: '78%', driftX: '10px'  },
-  { emoji: '🌊', delay: '3s',   dur: '7s',  left: '88%', driftX: '-25px' },
-  { emoji: '🌿', delay: '1.5s', dur: '6.5s',left: '15%', driftX: '15px'  },
-  { emoji: '💫', delay: '2.5s', dur: '8.5s',left: '55%', driftX: '-10px' },
-]
-
 export default function Hero() {
   const [loaded, setLoaded] = useState(false)
   const parallaxRef = useRef(null)
@@ -28,8 +17,8 @@ export default function Hero() {
     const onMove = (e) => {
       if (!parallaxRef.current) return
       const { innerWidth: w, innerHeight: h } = window
-      const x = (e.clientX / w - 0.5) * 18
-      const y = (e.clientY / h - 0.5) * 12
+      const x = (e.clientX / w - 0.5) * 14
+      const y = (e.clientY / h - 0.5) * 10
       parallaxRef.current.style.transform = `translate(${x}px, ${y}px)`
     }
     window.addEventListener('mousemove', onMove, { passive: true })
@@ -40,62 +29,42 @@ export default function Hero() {
     document.getElementById('quiz')?.scrollIntoView({ behavior: 'smooth' })
   }
 
+  const ease = 'cubic-bezier(0.23, 1, 0.32, 1)'
+
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-[#FDF8F0]">
 
-      {/* Zone background blobs */}
+      {/* Static zone background blobs — no morphing */}
       <div
         ref={parallaxRef}
-        className="absolute inset-0 pointer-events-none transition-transform duration-100"
-        style={{ willChange: 'transform' }}
+        className="absolute inset-0 pointer-events-none"
+        style={{ willChange: 'transform', transition: 'transform 120ms linear' }}
       >
-        {/* Hyper zone blob */}
         <div
-          className="absolute animate-morphBlob"
+          className="absolute"
           style={{
             top: '-10%', left: '-5%',
             width: '55%', height: '55%',
-            background: 'radial-gradient(ellipse, rgba(255,107,107,0.22) 0%, transparent 70%)',
+            background: 'radial-gradient(ellipse, rgba(255,107,107,0.18) 0%, transparent 70%)',
           }}
         />
-        {/* Window zone blob */}
         <div
-          className="absolute animate-morphBlob"
+          className="absolute"
           style={{
             top: '25%', left: '30%',
             width: '60%', height: '50%',
-            background: 'radial-gradient(ellipse, rgba(78,205,196,0.18) 0%, transparent 70%)',
-            animationDelay: '2s',
+            background: 'radial-gradient(ellipse, rgba(78,205,196,0.14) 0%, transparent 70%)',
           }}
         />
-        {/* Hypo zone blob */}
         <div
-          className="absolute animate-morphBlob"
+          className="absolute"
           style={{
             bottom: '-10%', right: '-5%',
             width: '55%', height: '55%',
-            background: 'radial-gradient(ellipse, rgba(168,180,212,0.20) 0%, transparent 70%)',
-            animationDelay: '4s',
+            background: 'radial-gradient(ellipse, rgba(168,180,212,0.16) 0%, transparent 70%)',
           }}
         />
       </div>
-
-      {/* Floating emoji particles */}
-      {PARTICLES.map((p, i) => (
-        <div
-          key={i}
-          className="ambient-particle absolute bottom-0 text-2xl select-none pointer-events-none"
-          style={{
-            left: p.left,
-            '--drift-x': p.driftX,
-            '--drift-start': '0px',
-            animation: `particleDrift ${p.dur} ${p.delay} ease-in infinite`,
-            fontSize: i % 3 === 0 ? '1.8rem' : '1.3rem',
-          }}
-        >
-          {p.emoji}
-        </div>
-      ))}
 
       {/* Hero content */}
       <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
@@ -105,8 +74,8 @@ export default function Hero() {
           className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-white/50 text-sm font-semibold text-gray-600 mb-8"
           style={{
             opacity: loaded ? 1 : 0,
-            transform: loaded ? 'translateY(0)' : 'translateY(20px)',
-            transition: 'opacity 0.5s ease-out, transform 0.5s ease-out',
+            transform: loaded ? 'translateY(0)' : 'translateY(8px)',
+            transition: `opacity 350ms ${ease}, transform 350ms ${ease}`,
           }}
         >
           {storedName ? (
@@ -124,12 +93,12 @@ export default function Hero() {
           style={{
             fontSize: 'clamp(3rem, 10vw, 7rem)',
             opacity: loaded ? 1 : 0,
-            transform: loaded ? 'translateY(0)' : 'translateY(30px)',
-            transition: 'opacity 0.55s 0.15s ease-out, transform 0.55s 0.15s ease-out',
+            transform: loaded ? 'translateY(0)' : 'translateY(8px)',
+            transition: `opacity 350ms 80ms ${ease}, transform 350ms 80ms ${ease}`,
           }}
         >
           <span
-            className="gradient-text animate-shimmer block"
+            className="gradient-text block"
             style={{
               background: 'linear-gradient(135deg, #FF6B6B 0%, #FF8E53 20%, #FFE66D 35%, #4ECDC4 55%, #88D8B0 70%, #A8B4D4 85%, #C3A6D4 100%)',
               backgroundClip: 'text',
@@ -146,8 +115,8 @@ export default function Hero() {
           className="text-xl md:text-2xl text-gray-500 font-medium mb-10 max-w-lg mx-auto leading-relaxed"
           style={{
             opacity: loaded ? 1 : 0,
-            transform: loaded ? 'translateY(0)' : 'translateY(20px)',
-            transition: 'opacity 0.5s 0.3s ease-out, transform 0.5s 0.3s ease-out',
+            transform: loaded ? 'translateY(0)' : 'translateY(8px)',
+            transition: `opacity 350ms 160ms ${ease}, transform 350ms 160ms ${ease}`,
           }}
         >
           Your nervous system has moods too —{' '}
@@ -159,11 +128,11 @@ export default function Hero() {
           className="relative inline-block"
           style={{
             opacity: loaded ? 1 : 0,
-            transform: loaded ? 'translateY(0)' : 'translateY(20px)',
-            transition: 'opacity 0.5s 0.45s ease-out, transform 0.5s 0.45s ease-out',
+            transform: loaded ? 'translateY(0)' : 'translateY(8px)',
+            transition: `opacity 350ms 240ms ${ease}, transform 350ms 240ms ${ease}`,
           }}
         >
-          {/* Pulse ring */}
+          {/* Pulse ring — kept: first-time marketing CTA */}
           <div
             className="absolute inset-0 rounded-full pointer-events-none"
             style={{
@@ -188,19 +157,16 @@ export default function Hero() {
           className="flex items-center justify-center gap-4 mt-14"
           style={{
             opacity: loaded ? 1 : 0,
-            transition: 'opacity 0.6s 0.6s ease-out',
+            transition: `opacity 350ms 320ms ${ease}`,
           }}
         >
           {[
-            { label: 'Hyperarousal', color: '#FF6B6B', emoji: '🔥' },
-            { label: 'Window',       color: '#4ECDC4', emoji: '🌊' },
-            { label: 'Hypoarousal', color: '#A8B4D4', emoji: '💤' },
+            { label: 'Hyperarousal', color: '#FF6B6B' },
+            { label: 'Window',       color: '#4ECDC4' },
+            { label: 'Hypoarousal', color: '#A8B4D4' },
           ].map((z) => (
             <div key={z.label} className="flex items-center gap-1.5 text-sm text-gray-500">
-              <span
-                className="w-3 h-3 rounded-full"
-                style={{ backgroundColor: z.color }}
-              />
+              <span className="w-3 h-3 rounded-full" style={{ backgroundColor: z.color }} />
               <span>{z.label}</span>
             </div>
           ))}

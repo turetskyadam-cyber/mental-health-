@@ -107,8 +107,8 @@ export default function StateQuiz() {
               style={{
                 background: `linear-gradient(135deg, ${ZONES[resultZone].fromColor}, ${ZONES[resultZone].toColor})`,
                 animation: floodOut
-                  ? 'zoneFloodOut 0.4s ease-in forwards'
-                  : 'zoneFlood 0.6s cubic-bezier(0.4,0,0.2,1) forwards',
+                  ? 'zoneFloodOut 0.35s ease-in forwards'
+                  : 'zoneFlood 0.5s cubic-bezier(0.23, 1, 0.32, 1) forwards',
               }}
             />
           )}
@@ -126,7 +126,7 @@ export default function StateQuiz() {
               <div className="p-10 text-center" style={{ color: zone.textColor }}>
                 <div
                   className="text-7xl mb-5"
-                  style={{ animation: 'expandIn 0.5s 0.2s cubic-bezier(0.34,1.56,0.64,1) both' }}
+                  style={{ animation: 'expandIn 0.3s 0.15s cubic-bezier(0.23, 1, 0.32, 1) both' }}
                 >
                   {zone.emoji}
                 </div>
@@ -136,7 +136,7 @@ export default function StateQuiz() {
                   className="inline-block px-4 py-1.5 rounded-full mb-4 font-bold text-xs uppercase tracking-widest"
                   style={{
                     background: 'rgba(255,255,255,0.30)',
-                    animation: 'fadeSlideUp 0.4s 0.28s ease-out both',
+                    animation: 'fadeSlideUp 0.3s 0.18s ease-out both',
                   }}
                 >
                   {storedName ? `✦ ${storedName}'s zone ✦` : '✦ This is your zone ✦'}
@@ -144,25 +144,25 @@ export default function StateQuiz() {
 
                 <h3
                   className="font-display font-black text-4xl md:text-5xl mb-2"
-                  style={{ animation: 'fadeSlideUp 0.4s 0.36s ease-out both' }}
+                  style={{ animation: 'fadeSlideUp 0.3s 0.22s ease-out both' }}
                 >
                   {zone.name}
                 </h3>
                 <p
                   className="text-lg font-semibold mb-1 opacity-90"
-                  style={{ animation: 'fadeSlideUp 0.4s 0.42s ease-out both' }}
+                  style={{ animation: 'fadeSlideUp 0.3s 0.26s ease-out both' }}
                 >
                   {zone.subtitle}
                 </p>
                 <p
                   className="text-base font-semibold italic mb-4 opacity-80"
-                  style={{ animation: 'fadeSlideUp 0.4s 0.48s ease-out both' }}
+                  style={{ animation: 'fadeSlideUp 0.3s 0.30s ease-out both' }}
                 >
                   {zone.tagline}
                 </p>
                 <p
                   className="text-base opacity-80 max-w-sm mx-auto leading-relaxed mb-5"
-                  style={{ animation: 'fadeSlideUp 0.4s 0.54s ease-out both' }}
+                  style={{ animation: 'fadeSlideUp 0.3s 0.34s ease-out both' }}
                 >
                   {zone.description}
                 </p>
@@ -172,7 +172,7 @@ export default function StateQuiz() {
                   className="grid grid-cols-2 gap-3 mb-5 text-left p-4 rounded-2xl"
                   style={{
                     background: 'rgba(255,255,255,0.20)',
-                    animation: 'fadeSlideUp 0.4s 0.60s ease-out both',
+                    animation: 'fadeSlideUp 0.3s 0.38s ease-out both',
                   }}
                 >
                   <div>
@@ -181,7 +181,7 @@ export default function StateQuiz() {
                       <p
                         key={item}
                         className="text-sm font-medium mb-1 flex items-center gap-1.5"
-                        style={{ color: zone.textColor, animation: `fadeSlideUp 0.3s ${0.66 + i * 0.06}s ease-out both` }}
+                        style={{ color: zone.textColor, animation: `fadeSlideUp 0.25s ${0.42 + i * 0.04}s ease-out both` }}
                       >
                         <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: zone.textColor, opacity: 0.5 }} />
                         {item}
@@ -194,7 +194,7 @@ export default function StateQuiz() {
                       <p
                         key={item}
                         className="text-sm font-medium mb-1 flex items-center gap-1.5"
-                        style={{ color: zone.textColor, animation: `fadeSlideUp 0.3s ${0.69 + i * 0.06}s ease-out both` }}
+                        style={{ color: zone.textColor, animation: `fadeSlideUp 0.25s ${0.44 + i * 0.04}s ease-out both` }}
                       >
                         <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: zone.textColor, opacity: 0.5 }} />
                         {item}
@@ -206,14 +206,14 @@ export default function StateQuiz() {
                 {/* Auto-scroll notice */}
                 <p
                   className="text-xs opacity-60 mb-6 font-medium"
-                  style={{ animation: 'fadeSlideUp 0.4s 0.84s ease-out both' }}
+                  style={{ animation: 'fadeSlideUp 0.3s 0.56s ease-out both' }}
                 >
                   Scrolling you to your landscape now ↓
                 </p>
 
                 <div
                   className="flex flex-col sm:flex-row gap-3 justify-center"
-                  style={{ animation: 'fadeSlideUp 0.4s 0.90s ease-out both' }}
+                  style={{ animation: 'fadeSlideUp 0.3s 0.60s ease-out both' }}
                 >
                   <RippleButton
                     onClick={scrollToWavemap}
@@ -251,7 +251,7 @@ export default function StateQuiz() {
                   style={{
                     width: `${progress}%`,
                     background: 'linear-gradient(90deg, #4ECDC4, #88D8B0)',
-                    transition: 'width 400ms cubic-bezier(0.4,0,0.2,1)',
+                    transition: 'width 300ms cubic-bezier(0.23, 1, 0.32, 1)',
                   }}
                 >
                   <div className="absolute inset-0 progress-shimmer" />
@@ -268,7 +268,7 @@ export default function StateQuiz() {
                 <h3
                   className="font-display font-bold text-2xl md:text-3xl text-gray-800 mb-8"
                   key={step}
-                  style={{ animation: 'slideInRight 0.3s ease-out both' }}
+                  style={{ animation: 'slideInRight 0.25s cubic-bezier(0.23, 1, 0.32, 1) both' }}
                 >
                   {question?.question}
                 </h3>
@@ -277,7 +277,7 @@ export default function StateQuiz() {
                 <div
                   className="grid gap-3"
                   key={`opts${step}`}
-                  style={{ animation: 'slideInRight 0.3s 0.05s ease-out both' }}
+                  style={{ animation: 'slideInRight 0.25s 0.04s cubic-bezier(0.23, 1, 0.32, 1) both' }}
                 >
                   {question?.options.map((opt) => {
                     const isSelected = selected === opt.zone
@@ -287,15 +287,14 @@ export default function StateQuiz() {
                         key={opt.zone}
                         onClick={() => handleSelect(opt.zone)}
                         disabled={selected !== null}
-                        className={`flex items-center gap-4 px-5 py-4 rounded-2xl border-2 text-left font-semibold text-gray-700 ripple-container ${selected === null ? 'hover:scale-[1.02]' : ''}`}
+                        className="flex items-center gap-4 px-5 py-4 rounded-2xl border-2 text-left font-semibold text-gray-700 ripple-container interactive"
                         style={{
                           borderColor: isSelected ? z.fromColor : '#E5E7EB',
                           background: isSelected
                             ? `linear-gradient(135deg, ${z.fromColor}22, ${z.toColor}22)`
                             : 'white',
-                          transform: isSelected ? 'scale(1.02)' : undefined,
-                          transition: 'all 200ms cubic-bezier(0.34,1.56,0.64,1)',
                           boxShadow: isSelected ? `0 0 0 3px ${z.fromColor}44` : undefined,
+                          transition: 'transform 150ms cubic-bezier(0.23, 1, 0.32, 1), box-shadow 150ms cubic-bezier(0.23, 1, 0.32, 1), border-color 150ms ease, background 150ms ease',
                         }}
                       >
                         <span className="text-3xl">{opt.emoji}</span>

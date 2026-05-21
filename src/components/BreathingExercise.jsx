@@ -133,13 +133,13 @@ export default function BreathingExercise() {
               key={m.id}
               disabled={switching}
               onClick={() => switchMode(m.id)}
-              className={`px-5 py-2.5 rounded-2xl font-bold text-sm transition-all duration-250 border-2 ${mode !== m.id && !switching ? 'hover:scale-[1.03] hover:shadow-md' : ''}`}
+              className="px-5 py-2.5 rounded-2xl font-bold text-sm border-2 interactive"
               style={{
                 background: mode === m.id ? `linear-gradient(135deg, ${m.color}CC, ${m.color}88)` : 'white',
                 borderColor: mode === m.id ? m.color : '#E5E7EB',
                 color: mode === m.id ? 'white' : '#6B7280',
-                transform: mode === m.id ? 'scale(1.04)' : undefined,
                 boxShadow: mode === m.id ? `0 4px 14px ${m.color}44` : undefined,
+                transition: 'transform 160ms cubic-bezier(0.23, 1, 0.32, 1), box-shadow 160ms ease, background 200ms ease, border-color 200ms ease, color 200ms ease',
               }}
             >
               <div>{m.name}</div>
@@ -211,7 +211,7 @@ export default function BreathingExercise() {
             {done && (
               <div
                 className="absolute"
-                style={{ animation: 'expandIn 0.5s 0.2s cubic-bezier(0.34,1.56,0.64,1) both' }}
+                style={{ animation: 'expandIn 0.3s 0.15s cubic-bezier(0.23, 1, 0.32, 1) both' }}
               >
                 <svg width="60" height="60" viewBox="0 0 60 60" className="absolute -top-8 -right-8">
                   <circle cx="30" cy="30" r="28" fill="#FFE66D" />
@@ -238,13 +238,14 @@ export default function BreathingExercise() {
             {Array.from({ length: 5 }).map((_, i) => (
               <div
                 key={i}
-                className="rounded-full transition-all duration-400"
+                className="rounded-full"
                 style={{
                   width: i < round ? 20 : 10,
                   height: 10,
                   background: i < round
                     ? `linear-gradient(90deg, ${color}, ${color}AA)`
                     : '#E5E7EB',
+                  transition: 'width 200ms cubic-bezier(0.23, 1, 0.32, 1), background 200ms ease',
                 }}
               />
             ))}

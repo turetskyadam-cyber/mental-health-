@@ -19,17 +19,16 @@ export default function CardSortGame() {
   const [gaugeState, setGaugeState] = useState('neutral') // 'neutral' | 'correct' | 'wrong'
 
   const dragStart = useRef(null)
+  const dragStartTime = useRef(null)
   const cardRef = useRef(null)
   const done = index >= items.length
 
-  // Use Pointer Events only — they handle both mouse and touch,
-  // and avoid the double-fire bug from mixing onPointerDown + onTouchStart.
-  // touch-action:none on the card prevents browser scroll from stealing the drag.
   const handleDragStart = useCallback((e) => {
     e.preventDefault()
     const startX = e.clientX
     const startY = e.clientY
     dragStart.current = { x: startX, y: startY }
+    dragStartTime.current = Date.now()
     setIsDragging(true)
     setFlyDir(null)
     setWrongFeedback(null)
@@ -42,10 +41,12 @@ export default function CardSortGame() {
     const onEnd = (ev) => {
       if (!dragStart.current) return
       const finalDx = ev.clientX - startX
+      const elapsed = Date.now() - (dragStartTime.current || Date.now())
+      const velocity = Math.abs(finalDx) / Math.max(elapsed, 1)
       dragStart.current = null
       setIsDragging(false)
 
-      if (Math.abs(finalDx) >= 70) {
+      if (Math.abs(finalDx) >= 70 || velocity > 0.3) {
         resolveSwipe(finalDx > 0 ? 'right' : 'left')
       } else {
         setOffset({ x: 0, y: 0 })
@@ -160,7 +161,7 @@ export default function CardSortGame() {
                   style={{
                     left: `${pct}%`,
                     background: dotColor,
-                    transition: 'left 400ms cubic-bezier(0.34,1.56,0.64,1), background 400ms ease',
+                    transition: 'left 350ms cubic-bezier(0.23, 1, 0.32, 1), background 350ms ease',
                   }}
                 />
               </div>
@@ -172,14 +173,14 @@ export default function CardSortGame() {
           /* ── Completion ── */
           <div className="relative text-center py-10">
             <Confetti trigger={confettiTrig} count={30} />
-            <div className="text-6xl mb-4" style={{ animation: 'expandIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both' }}>
+            <div className="text-6xl mb-4" style={{ animation: 'expandIn 0.3s cubic-bezier(0.23, 1, 0.32, 1) both' }}>
               {score >= 9 ? '🏆' : score >= 6 ? '⭐' : '🌱'}
             </div>
             <h3 className="font-display font-black text-3xl text-gray-800 mb-2"
-              style={{ animation: 'fadeSlideUp 0.4s 0.1s ease-out both' }}>
+              style={{ animation: 'fadeSlideUp 0.3s 0.08s ease-out both' }}>
               {score >= 9 ? 'Window Expert!' : score >= 6 ? 'Nice work!' : 'Good effort!'}
             </h3>
-            <p className="text-gray-500 mb-6" style={{ animation: 'fadeSlideUp 0.4s 0.2s ease-out both' }}>
+            <p className="text-gray-500 mb-6" style={{ animation: 'fadeSlideUp 0.3s 0.16s ease-out both' }}>
               You got {score} out of {items.length} correct.
             </p>
             <div className="flex gap-3 justify-center" style={{ animation: 'fadeSlideUp 0.4s 0.3s ease-out both' }}>

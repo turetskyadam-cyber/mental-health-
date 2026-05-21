@@ -36,9 +36,10 @@ export default function Nav() {
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
+        className={`fixed top-0 left-0 right-0 z-40 ${
           visible ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'
         }`}
+        style={{ transition: 'opacity 200ms cubic-bezier(0.23, 1, 0.32, 1), transform 200ms cubic-bezier(0.23, 1, 0.32, 1)' }}
       >
         <div className="glass border-b border-white/40 px-6 py-3 flex items-center justify-between max-w-6xl mx-auto">
           <div className="flex items-center gap-2">
@@ -78,9 +79,10 @@ export default function Nav() {
 
       {/* Mobile drawer */}
       <div
-        className={`fixed inset-y-0 right-0 z-50 w-64 glass border-l border-white/40 flex flex-col pt-16 pb-8 px-6 transition-transform duration-300 md:hidden ${
+        className={`fixed inset-y-0 right-0 z-50 w-64 glass border-l border-white/40 flex flex-col pt-16 pb-8 px-6 md:hidden ${
           menuOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
+        style={{ transition: 'transform 280ms cubic-bezier(0.32, 0.72, 0, 1)' }}
       >
         <button
           className="absolute top-4 right-4 p-2 rounded-lg hover:bg-white/40"
